@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Page</title>
+
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Include your charts.js file -->
+    <script src="{{ url_for('static', filename='charts.js') }}"></script>
+</head>
+<body>
+
+    <h1>Result Page</h1>
+
+    <h2>Gender Ratio</h2>
+    <canvas id="genderRatioChart" width="0.4" height="0.4"></canvas>
+    <p>Men: {{ gender_counts['male'] }}, Women: {{ gender_counts['female'] }}</p>
+
+    <h2>Sentiment Distribution</h2>
+    <canvas id="sentimentDistributionChart" width="0.44" height="0.44"></canvas>
+
+
+    <h2>Tweets</h2>
+    <ul>
+        {% for tweet in tweets %}
+            <li>
+                <strong>Tweet:</strong> {{ tweet['tweet'] }} |
+                <strong>Gender:</strong> {{ tweet['gender'] }} |
+                <strong>Sentiment:</strong> {{ tweet['sentiment'] }} |
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // Gender Ratio Chart
+        var genderRatioData = {
+            labels: ["Men", "Women"],
+            datasets: [{
+                data: [{{ gender_counts['male'] }}, {{ gender_counts['female'] }}],
+                backgroundColor: ["blue", "pink"],
+            }]
+        };
+        createPieChart('genderRatioChart', genderRatioData);
+
+        // Sentiment Distribution Chart
+        var sentimentDistributionData = {
+            labels: ["Positive", "Negative", "Neutral"],
+            datasets: [{
+                data: [{{ sentiment_counts['positive'] }}, {{ sentiment_counts['negative'] }}, {{ sentiment_counts['neutral'] }}],
+                backgroundColor: ["green", "red", "gray"],
+            }]
+        };
+        createPieChart('sentimentDistributionChart', sentimentDistributionData);
+
+        // Gender Distribution Chart
+        var genderDistributionData = {
+            labels: ["Men", "Women"],
+            datasets: [{
+                data: [{{ gender_counts['male'] }}, {{ gender_counts['female'] }}],
+                backgroundColor: ["blue", "pink"],  // Fixed quotation marks here
+            }]
+        };
+        createPieChart('genderDistributionChart', genderDistributionData);
+    </script>
+
+</body>
+</html>
